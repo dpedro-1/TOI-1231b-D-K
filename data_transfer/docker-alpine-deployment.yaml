@@ -1,0 +1,35 @@
+#02/08/24
+#
+#
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: data-transfer-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: data-transfer
+  template:
+    metadata:
+      labels:
+        app: data-transfer
+    spec:
+      hostNetwork: true
+      nodeSelector:
+        kubernetes.io/hostname: pi-small-drone
+      containers:
+      - name: data-transfer-container
+        image: isaacblekhman14/alpinerepo:v3
+        imagePullPolicy: IfNotPresent
+        env:
+        - name: SOURCE_DIR
+          value: "/home/"
+        volumeMounts:
+        - name: data-volume
+          mountPath: "/home"
+      volumes:
+      - name: data-volume
+        hostPath:
+          path: "/home/toi1231bsmall/filedump/files"
